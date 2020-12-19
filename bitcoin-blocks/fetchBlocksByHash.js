@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fs = require('fs-extra');
 
-const blockHashList = require('./dec-2020-block-hash-list.json');
+const blockHashList = require('./hashList.json');
 fs.ensureFileSync('nextSuccessfulBlockHash.txt');
 
 let nextSuccessfulBlockHash = fs.readFileSync(
