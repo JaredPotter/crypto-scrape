@@ -8,12 +8,25 @@ let nextSuccessfulBlockHash = fs.readFileSync(
   'nextSuccessfulBlockHash.txt',
   'utf-8'
 );
+let index = 0;
+
+if (nextSuccessfulBlockHash) {
+  index = blockHashList.findIndex((hash) => {
+    return nextSuccessfulBlockHash === hash;
+  });
+}
+
+if (index) {
+  console.log('Continuing from index: ' + index);
+}
 
 const BASE_URL = 'https://blockchain.info/rawblock';
 const outputFilename = 'bitcoin-transactions.csv';
 
 (async () => {
-  for (const hash of blockHashList) {
+  for (; index < blockHashList.length; index++) {
+    const hash = blockHashList[index];
+
     fs.writeFileSync('nextSuccessfulBlockHash.txt', hash);
     nextSuccessfulBlockHash = hash;
 
@@ -24,15 +37,15 @@ const outputFilename = 'bitcoin-transactions.csv';
       const response = await axios.get(url);
       const data = response.data;
 
-      const block = {
-        hash,
-        time: data.time,
-        fee: data.fee,
-        transaction_count: data.n_tx,
-        size: data.size,
-        height: data.height,
-        weight: data.weight,
-      };
+      // const block = {
+      //   hash,
+      //   time: data.time,
+      //   fee: data.fee,
+      //   transaction_count: data.n_tx,
+      //   size: data.size,
+      //   height: data.height,
+      //   weight: data.weight,
+      // };
 
       const transactions = data.tx;
 
